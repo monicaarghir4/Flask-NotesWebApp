@@ -1,0 +1,229 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <link
+      rel="stylesheet"
+      href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css"
+      integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh"
+      crossorigin="anonymous"
+    />
+    <link
+      rel="stylesheet"
+      href="https://stackpath.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css"
+      crossorigin="anonymous"
+    />
+
+    <title>{% block title %}M&C Notes{% endblock %}</title>
+    <style>
+      #bodyid {
+        background-color:#DE5D83;
+        width: 100%;
+      }
+      #navbarid {
+        background-color: #5e0e3aef;
+      }
+      #titleid {
+        font-style:oblique;
+        color:#5e0e3aef;
+        padding-top: 30px;
+        padding-bottom: 20px;
+      }
+      #dataid {
+        position: absolute;
+        bottom: 0px;
+        color: dimgrey;
+      }
+      .close {
+        position: absolute;
+        right: 5px;
+        top: 5px;
+      }
+      .list-group-item {
+        background-color: #FF9BAA;
+        margin-bottom: 20px;
+        margin-left: 20px;
+        margin-right: 20px;
+        margin-top: 20px;
+        min-height: 200px;
+        border-top: #6F3637;
+        border-bottom: #6F3637;
+        border-left: #6F3637;
+        border-right: #6F3637;
+
+        display:flex;
+        flex-direction:column;
+        justify-content: space-between;
+      }
+      .list-group {
+        display: grid;
+        grid-template-columns: repeat(3, minmax(0, 1fr));
+        column-gap: normal;
+      }
+      #notes {
+        border-radius: 20px;
+        border-top: 20px;
+        border-bottom: 20px;
+      }
+      #note {
+        background-color: #EEA9B8;
+        border-color: #EEA9B8;
+        min-height: 150px;
+        max-width: 600px;
+        display: block;
+        margin-top: 50px;
+        margin-left: auto;
+        margin-right: auto;
+        border-radius: 20px;
+
+      }
+      #addnotebutton {
+        background-color: #AD1457;
+        border-radius: 50%;
+        border-color: #AD1457;
+        padding-left: 25px;
+        padding-top: 20px;
+        padding-right: 25px;
+        padding-bottom: 20px;
+      }
+      .buttons {
+        display: block;
+        margin-left: auto;
+        margin-right: auto;
+        background-color: #AD1457;
+        border-color: #AD1457;
+        color: white;
+      }
+      .buttons:hover {
+        background-color: #AD1457;
+        border-color: #AD1457;
+      }
+      #firstname {
+        position: absolute;
+        right: 90px;
+        color: white;
+      }
+      #firstname:hover {
+        color: white;
+      }
+      #photo {
+        width: 80px;
+        height: 56px;
+        position: absolute;
+        right: 0px;
+        top: 0px;
+      }
+
+      #addtodobutton {
+        background-color: #AD1457;
+        border-color: #AD1457;
+        margin-bottom: 20px;
+      }
+
+      #todoid {
+        cursor: pointer;
+        position: relative;
+        padding-left: 5px;
+        padding-top: 10px;
+        padding-bottom: 10px;;
+        background: #fcb6c1;
+        font-size: 18px;
+        transition: 0.2s;
+        -webkit-user-select: none;
+        -moz-user-select: none;
+        -ms-user-select: none;
+        user-select: none;
+      }
+
+      #todoid:nth-child(odd) {
+        background: #FF9BAA;
+
+      }
+
+      #line {
+        border: 2px solid #5e0e3aef;
+        border-radius: 5px;
+      }
+
+      #todo {
+        background-color: #EEA9B8;
+        border-color: #EEA9B8;
+        min-height: 50px;
+        max-width: 1000px;
+        display: block;
+        margin-top: 50px;
+        margin-left: auto;
+        margin-right: auto;
+        border-radius: 20px;
+      }
+    </style>
+  </head>
+  <body id="bodyid">
+    <nav class="navbar navbar-expand-lg navbar-dark" id="navbarid">
+      <button
+        class="navbar-toggler"
+        type="button"
+        data-toggle="collapse"
+        data-target="#navbar"
+      >
+        <span class="navbar-toggler-icon"></span>
+      </button>
+
+      <div class="collapse navbar-collapse">
+        <div class="navbar-nav">
+          {% if user.is_authenticated %}
+          <a class="nav-item nav-link" id="home" href="/">Home</a>
+          <a class="nav-item nav-link" id="logout" href="/logout">Logout</a>
+          <a class="nav-item nav-link" id="firstname" >{{ user.first_name }}</a>
+          {% else %}
+          <a class="nav-item nav-link" id="login" href="/login">Login</a>
+          <a class="nav-item nav-link" id="signUp" href="/sign-up">Sign Up</a>
+          {% endif %}
+          <img src="../static/logo.jpg" align="middle" id="photo"/>
+
+        </div>
+      </div>
+    </nav>
+
+    {% with messages = get_flashed_messages(with_categories=true) %} {% if
+    messages %} {% for category, message in messages %} {% if category ==
+    'error' %}
+    <div class="alert alert-danger alter-dismissable fade show" role="alert">
+      {{ message }}
+      <button type="button" class="close" data-dismiss="alert">
+        <span aria-hidden="true">&times;</span>
+      </button>
+    </div>
+    {% else %}
+    <div class="alert alert-light alter-dismissable fade show" role="alert">
+      {{ message }}
+      <button type="button" class="close" data-dismiss="alert">
+        <span aria-hidden="true">&times;</span>
+      </button>
+    </div>
+    {% endif %} {% endfor %} {% endif %} {% endwith %}
+
+    <div class="container">{% block content %} {% endblock %}</div>
+    <script
+      src="https://code.jquery.com/jquery-3.2.1.slim.min.js"
+      integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN"
+      crossorigin="anonymous"
+    ></script>
+    <script
+      src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js"
+      integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q"
+      crossorigin="anonymous"
+    ></script>
+    <script
+      src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js"
+      integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl"
+      crossorigin="anonymous"
+    ></script>
+
+    <script
+      type="text/javascript"
+      src="{{ url_for('static', filename='index.js') }}"
+    ></script>
+  </body>
+</html>
